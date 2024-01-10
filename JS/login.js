@@ -26,6 +26,7 @@ const app = createApp({
                     const {token, expired} = res.data;
                     document.cookie = `hexToken=${ token }; expires=${ new Date(expired)}`;
                     this.checkLogin();
+                    
                 })
                 .catch((error) => {
                     alert(`${error.data.message}，請輸入正確資料並再次登入。`);
@@ -35,9 +36,11 @@ const app = createApp({
             axios.post(`${url}/api/user/check`)
                 .then((res) => {
                     console.log(res.data);
+                    window.location.href="./product.html"
                 })
                 .catch((error) => {
                     console.dir(error);
+                    window.location.href="./login.html"
                 })
         }
 
