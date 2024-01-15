@@ -27,10 +27,22 @@ const app = createApp({
                 })
                 .catch((error) => {
                     console.dir(error);
+                    window.location.href="./login.html"
+                })
+        },
+        checkLogin() {
+            axios.post(`${url}/api/user/check`)
+                .then((res) => {
+                    console.log(res.data);
+                })
+                .catch((error) => {
+                    console.dir(error);
+                    window.location.href="./login.html"
                 })
         }
     },
     mounted() {
+        this.checkLogin();
         this.getProducts();
     },
 });

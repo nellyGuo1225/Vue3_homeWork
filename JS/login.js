@@ -25,28 +25,15 @@ const app = createApp({
                     // console.log(this.user);
                     const {token, expired} = res.data;
                     document.cookie = `hexToken=${ token }; expires=${ new Date(expired)}`;
-                    this.checkLogin();
-                    
+                    //this.checkLogin();
+                    window.location.href="./product.html"
                 })
                 .catch((error) => {
                     alert(`${error.data.message}，請輸入正確資料並再次登入。`);
                 })
         },
-        checkLogin() {
-            axios.post(`${url}/api/user/check`)
-                .then((res) => {
-                    console.log(res.data);
-                    window.location.href="./product.html"
-                })
-                .catch((error) => {
-                    console.dir(error);
-                    window.location.href="./login.html"
-                })
-        }
-
-    },
-    mounted() {
         
+
     },
 });
 
