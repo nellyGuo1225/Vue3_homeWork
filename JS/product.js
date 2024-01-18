@@ -8,8 +8,6 @@ const token = document.cookie.replace(
   );
 axios.defaults.headers.common['Authorization'] = token; 
 
-const productModal=new bootstrap.Modal(document.getElementById('newProductModal'));
-
 if(token === "" || token === null){
     window.location.href="./login.html"
 }
@@ -17,8 +15,9 @@ if(token === "" || token === null){
 const app = createApp({
     data() {
         return {
-            productModal:{},
-            tempProduct: {},
+            tempProduct: {
+                data: {}
+            },
             products: [],
             product: {
                 data: {
@@ -39,7 +38,11 @@ const app = createApp({
                         'https://images.unsplash.com/photo-1511914265872-c40672604a80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1867&q=80'
                     ]
                 }
-            }
+            },
+            addProductModal: {},
+            editProductModal: {},
+            myToast: {},
+            toastContent: 'Hi'
         }
     },
     methods: {
@@ -67,8 +70,36 @@ const app = createApp({
         createNewProduct() {
             axios.post(`${url}/api/${path}/admin/product`,this.product)
                 .then((res) => {
+                    this.addProductModal.hide();
+                    this.toastContent = '產品建立成功。';
+                    this.myToast.show();
+                    this.getProducts();
+                })
+                .catch((error) => {
+                    console.dir(error);
+                })
+        },
+        deleteProduct(id) {
+            axios.delete(`${url}/api/${path}/admin/product/${id}`)
+                .then((res) => {
+                    this.toastContent = '成功刪除一筆資料。';
+                    this.myToast.show();
+                    this.getProducts();
+                })
+                .catch((error) => {
+                    console.dir(error);
+                })
+        },
+        prepareEdit(item) {
+            this.tempProduct.data = JSON.parse(JSON.stringify(item));
+        },
+        confirmEdit(id) {
+            axios.put(`${url}/api/${path}/admin/product/${id}`,this.tempProduct)
+                .then((res) => {
                     console.log(res.data);
-                    this.productModal.hide()
+                    this.toastContent = '修改成功。';
+                    this.editProductModal.hide();
+                    this.myToast.show();
                     this.getProducts();
                 })
                 .catch((error) => {
@@ -79,6 +110,18 @@ const app = createApp({
     mounted() {
         this.checkLogin();
         this.getProducts();
+        
+        //Modal
+        this.addProductModal = new bootstrap.Modal(document.getElementById('newProductModal'), {
+            keyboard: false,
+          });
+        
+        this.editProductModal = new bootstrap.Modal(document.getElementById('editModal'), {
+            keyboard: false,
+          });
+
+        //toast
+        this.myToast = new bootstrap.Toast(document.getElementById('myToast'));
     },
 });
 
