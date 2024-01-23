@@ -61,7 +61,10 @@ const app = createApp({
                 updateModal.show();
                 
             }else if(status === 'edit') {
-                this.tempProduct = {...item};
+                this.tempProduct = {
+                    imagesUrl:[],
+                    ...item,
+                };
                 this.isNew = false;
                 updateModal.show();
             }else {
